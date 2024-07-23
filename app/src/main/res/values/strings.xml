@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">30 Days Of Memories</string>
+    <string name="day">Day %i</string>
+</resources>
