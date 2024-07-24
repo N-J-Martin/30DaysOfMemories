@@ -38,13 +38,46 @@ object Memory {
         R.drawable.image30
     )
 
+    val descriptions = listOf<Int>(
+        R.string.image1,
+        R.string.image2,
+        R.string.image3,
+        R.string.image4,
+        R.string.image5,
+        R.string.image6,
+        R.string.image7,
+        R.string.image8,
+        R.string.image9,
+        R.string.image10,
+        R.string.image11,
+        R.string.image12,
+        R.string.image13,
+        R.string.image14,
+        R.string.image15,
+        R.string.image16,
+        R.string.image17,
+        R.string.image18,
+        R.string.image19,
+        R.string.image20,
+        R.string.image21,
+        R.string.image22,
+        R.string.image23,
+        R.string.image24,
+        R.string.image25,
+        R.string.image26,
+        R.string.image27,
+        R.string.image28,
+        R.string.image29,
+        R.string.image30
+    )
+
     val memories = setUpMemoryList()
 }
 
 private fun setUpMemoryList() : MutableList<MemoryInfo> {
     val list = mutableListOf<MemoryInfo>()
     for (i in 1..Memory.images.size) {
-        list.add(MemoryInfo(Memory.images[i-1], i))
+        list.add(MemoryInfo(Memory.images[i-1], Memory.descriptions[i-1], i))
     }
     return list
 }

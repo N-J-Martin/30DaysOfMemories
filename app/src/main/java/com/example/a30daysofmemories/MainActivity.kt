@@ -5,10 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,23 +62,28 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MemoriesApp(modifier: Modifier = Modifier) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 256.dp),
+    LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Adaptive(minSize = 128.dp),
         contentPadding = PaddingValues(dimensionResource(id = R.dimen.small_padding)),
         modifier = modifier,
-        ) {
+         content = {
         items(Memory.memories) {
-            MemoryCard(it.imageRes, it.day, Modifier.padding(dimensionResource(id = R.dimen.small_padding)))
+            MemoryCard(it.imageRes, it.descriptionRes, it.day, Modifier.padding(dimensionResource(id = R.dimen.small_padding)))
         }
 
-    }
-
+        }
+    )
 }
 
 @Composable
-fun MemoryCard(@DrawableRes imageRes: Int, day: Int,  modifier: Modifier = Modifier) {
+fun MemoryCard(@DrawableRes imageRes: Int, @StringRes descriptionRes: Int, day: Int, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     Card(
-        modifier = modifier.clip(Shapes.medium)
+        onClick = { expanded = !expanded},
+        modifier = modifier
+            .animateContentSize()
+            .clip(Shapes.medium)
+            .width(if (expanded) 256.dp else 128.dp)
+
     ) {
         Column (
             verticalArrangement = Arrangement.Center,
@@ -97,20 +102,14 @@ fun MemoryCard(@DrawableRes imageRes: Int, day: Int,  modifier: Modifier = Modif
             )*/
             Box (modifier = Modifier
                 .animateContentSize()
-                .size( if (expanded) 256.dp else 128.dp)
+                .size(if (expanded) 256.dp else 128.dp)
                 .padding(dimensionResource(id = R.dimen.small_padding))
                 .clip(Shapes.small)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    expanded = !expanded
-                }
+
             ) {
                 Image(
                     painter = painterResource(id = imageRes),
-                    // add content description,and/or text after
-                    contentDescription = null,
+                    contentDescription = stringResource(id = descriptionRes),
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -137,7 +136,7 @@ fun TopBar(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun CardPreview() {
-    MemoryCard(imageRes = R.drawable.image1, 1)
+    MemoryCard(imageRes = R.drawable.image1, R.string.image1,1)
 }
 
 @Preview
