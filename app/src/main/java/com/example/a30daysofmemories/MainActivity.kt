@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.a30daysofmemories.data.Memory
 import com.example.a30daysofmemories.ui.theme.Shapes
 import com.example.a30daysofmemories.ui.theme._30DaysOfMemoriesTheme
@@ -43,7 +47,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             _30DaysOfMemoriesTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
+                Scaffold( modifier = Modifier.fillMaxSize(),
+                    topBar = {TopBar()}
+                ) { innerPadding ->
                     MemoriesApp(modifier = Modifier.padding(innerPadding))
                 }
             }
@@ -53,12 +59,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MemoriesApp(modifier: Modifier = Modifier) {
-    var day = 1
-    LazyVerticalGrid(columns = GridCells.Fixed(5), modifier = modifier) {
+    LazyVerticalGrid(columns = GridCells.Fixed(5),
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.small_padding)),
+        modifier = modifier) {
         items(Memory.memories) {
-            MemoryCard(it, day)
-            day++
+            MemoryCard(it.imageRes, it.day)
         }
+
     }
 
 }
@@ -98,6 +105,20 @@ fun MemoryCard(@DrawableRes imageRes: Int, day: Int,  modifier: Modifier = Modif
 
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(modifier: Modifier = Modifier) {
+    CenterAlignedTopAppBar(title = {
+        Text(
+            text = stringResource(id = R.string.app_name),
+            style = MaterialTheme.typography.displayLarge,
+            fontSize = 28.sp,
+            maxLines = 1
+        )
+       },
+        modifier = modifier)
 }
 
 @Preview

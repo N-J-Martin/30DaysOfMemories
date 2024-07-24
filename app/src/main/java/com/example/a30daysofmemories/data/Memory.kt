@@ -1,9 +1,11 @@
 package com.example.a30daysofmemories.data
 
+
 import com.example.a30daysofmemories.R
+import com.example.a30daysofmemories.model.MemoryInfo
 
 object Memory {
-    val memories = listOf<Int>(
+    val images = listOf<Int>(
         R.drawable.image1,
         R.drawable.image2,
         R.drawable.image3,
@@ -35,4 +37,14 @@ object Memory {
         R.drawable.image29,
         R.drawable.image30
     )
+
+    val memories = setUpMemoryList()
+}
+
+private fun setUpMemoryList() : MutableList<MemoryInfo> {
+    val list = mutableListOf<MemoryInfo>()
+    for (i in 1..Memory.images.size) {
+        list.add(MemoryInfo(Memory.images[i-1], i))
+    }
+    return list
 }
