@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.a30daysofmemories.data.Memory
 import com.example.a30daysofmemories.ui.theme.Shapes
 import com.example.a30daysofmemories.ui.theme._30DaysOfMemoriesTheme
 
@@ -49,12 +53,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MemoriesApp(modifier: Modifier = Modifier) {
-
+    var day = 1
+    LazyVerticalGrid(columns = GridCells.Fixed(5), modifier = modifier) {
+        items(Memory.memories) {
+            MemoryCard(it, day)
+            day++
+        }
+    }
 
 }
 
 @Composable
-fun MemoryCard(@DrawableRes imageRes: Int, modifier: Modifier = Modifier) {
+fun MemoryCard(@DrawableRes imageRes: Int, day: Int,  modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.clip(Shapes.medium)
     ) {
@@ -64,7 +74,7 @@ fun MemoryCard(@DrawableRes imageRes: Int, modifier: Modifier = Modifier) {
 
         ){
             Text(
-                text = stringResource(id = R.string.day, 1),
+                text = stringResource(id = R.string.day, day),
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding))
             )
@@ -93,7 +103,12 @@ fun MemoryCard(@DrawableRes imageRes: Int, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun CardPreview() {
-    MemoryCard(imageRes = R.drawable.image1)
+    MemoryCard(imageRes = R.drawable.image1, 1)
 }
 
+@Preview
+@Composable
+fun AppPreview() {
+    MemoriesApp()
+}
 
