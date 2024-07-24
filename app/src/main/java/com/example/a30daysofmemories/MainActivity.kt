@@ -5,15 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,7 +26,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,7 +37,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,11 +62,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MemoriesApp(modifier: Modifier = Modifier) {
-    LazyVerticalGrid(columns = GridCells.Fixed(5),
+    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 256.dp),
         contentPadding = PaddingValues(dimensionResource(id = R.dimen.small_padding)),
-        modifier = modifier) {
+        modifier = modifier,
+        ) {
         items(Memory.memories) {
-            MemoryCard(it.imageRes, it.day)
+            MemoryCard(it.imageRes, it.day, Modifier.padding(dimensionResource(id = R.dimen.small_padding)))
         }
 
     }
@@ -72,12 +76,14 @@ fun MemoriesApp(modifier: Modifier = Modifier) {
 
 @Composable
 fun MemoryCard(@DrawableRes imageRes: Int, day: Int,  modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = modifier.clip(Shapes.medium)
     ) {
         Column (
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
 
         ){
             Text(
@@ -90,9 +96,16 @@ fun MemoryCard(@DrawableRes imageRes: Int, day: Int,  modifier: Modifier = Modif
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.medium_padding))
             )*/
             Box (modifier = Modifier
-                .size(128.dp)
+                .animateContentSize()
+                .size( if (expanded) 256.dp else 128.dp)
                 .padding(dimensionResource(id = R.dimen.small_padding))
                 .clip(Shapes.small)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    expanded = !expanded
+                }
             ) {
                 Image(
                     painter = painterResource(id = imageRes),
