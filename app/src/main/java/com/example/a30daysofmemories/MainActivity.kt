@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,12 +50,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MemoriesApp(modifier: Modifier = Modifier) {
 
+
 }
 
 @Composable
 fun MemoryCard(@DrawableRes imageRes: Int, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.clip(Shapes.small)
+        modifier = modifier.clip(Shapes.medium)
     ) {
         Column (
             verticalArrangement = Arrangement.Center,
@@ -70,16 +72,19 @@ fun MemoryCard(@DrawableRes imageRes: Int, modifier: Modifier = Modifier) {
             Spacer(
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.medium_padding))
             )*/
-            Image(
-                painter = painterResource(id = imageRes),
-                // add content description,and/or text after
-                contentDescription = null,
-                contentScale = ContentScale.Inside,
-                modifier = Modifier
-                    .size(128.dp)
-                    .padding(dimensionResource(id = R.dimen.small_padding))
-                    .clip(Shapes.small)
-            )
+            Box (modifier = Modifier
+                .size(128.dp)
+                .padding(dimensionResource(id = R.dimen.small_padding))
+                .clip(Shapes.small)
+            ) {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    // add content description,and/or text after
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
 
         }
     }
